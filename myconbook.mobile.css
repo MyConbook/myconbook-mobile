@@ -1,0 +1,8 @@
+.guide-detail-hours th {
+	text-align: right;
+	padding-right: 0.5em;
+}
+
+.open-guide-hours {
+	color: #228B22;
+}

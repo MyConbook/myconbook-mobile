@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>MyConbook</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/png" href="favicon.png" />
+		<link rel="apple-touch-icon" href="homepage.png" />
+		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+		<link rel="stylesheet" type="text/css" href="myconbook.mobile.css" />
+		
+		<!-- View templates -->
+		<script id="schedule-select-item-template" type="text/x-handlebars-template">
+			<a href="#schedule-list?date={{ date }}">{{ day }}</a>
+		</script>
+		<script id="schedule-list-items-template" type="text/x-handlebars-template">
+			{{#DividerInfo}}<li data-role="list-divider">{{ Text }}<span class="ui-li-count">{{ Count }}</span></li>{{/DividerInfo}}
+			<li><a href="#schedule-details?id={{ ID }}" data-rel="dialog">
+				<h3>{{ Title }}</h3>
+				<p><strong>{{ Location }}</strong></p>
+				<p>{{ TimeRange }}</p>
+			</a></li>
+		</script>
+		<script id="schedule-detail-template" type="text/x-handlebars-template">
+			<h2>{{ Title }}</h2>
+			{{#if Description}}<p>{{nl2br Description}}</p>{{/if}}
+			{{#if Category}}<p>Category: {{ Category }}</p>{{/if}}
+			<a href="#" data-role="button" data-rel="back" data-theme="c">Close</a>
+		</script>
+		<script id="guide-list-items-template" type="text/x-handlebars-template">
+			{{#DividerInfo}}<li data-role="list-divider">{{ Text }}<span class="ui-li-count">{{ Count }}</span></li>{{/DividerInfo}}
+			<li><a href="#guide-details?view={{ ViewName }}&id={{ ID }}">
+				<h3>{{ Name }}</h3>
+				<p>{{nl2br Address}} &#9642; {{ Phone }}</p>
+				<p>Today&apos;s hours: <span{{#if IsOpen}} class="open-guide-hours"{{/if}}>{{ TodaysHours }}</span></p>
+			</a></li>
+		</script>
+		<script id="atm-list-items-template" type="text/x-handlebars-template">
+			{{#DividerInfo}}<li data-role="list-divider">{{ Text }}<span class="ui-li-count">{{ Count }}</span></li>{{/DividerInfo}}
+			<li><a href="#guide-details?view={{ ViewName }}&id={{ ID }}">
+				<h3>{{ Building }}</h3>
+				<p>{{nl2br Address}}</p>
+			</a></li>
+		</script>
+		<script id="guide-detail-template" type="text/x-handlebars-template">
+			<p>
+				<h4>Address</h4>
+				{{nl2br Address}}
+			</p>
+			{{#if Phone}}
+			<p>
+				<h4>Phone</h4>
+				<a href="tel:{{ Phone }}" data-role="button" data-icon="info" data-iconpos="right">Call {{ Phone }}</a>
+			</p>
+			{{/if}}
+			<p>
+				<h4>Category</h4>
+				{{ Category }}
+			</p>
+			{{#if Comments}}
+			<p>
+				<h4>Review/comments</h4>
+				{{{ Comments }}}
+			</p>
+			{{/if}}
+			{{#if CleanedHours}}
+			<p>
+				<h4>Location hours</h4>
+				<table class="guide-detail-hours">
+					{{#with CleanedHours}}
+					<tr><th scope="col">Thursday:</td><td>{{ Thursday }}</td></tr>
+					<tr><th scope="col">Friday:</td><td>{{ Friday }}</td></tr>
+					<tr><th scope="col">Saturday:</td><td>{{ Saturday }}</td></tr>
+					<tr><th scope="col">Sunday:</td><td>{{ Sunday }}</td></tr>
+					{{/with}}
+				</table>
+			</p>
+			{{/if}}
+			<p>
+				<h4>External links</h4>
+				{{#if URL}}<a href="{{ URL }}" data-role="button" data-icon="arrow-r" data-iconpos="right">Open website</a>{{/if}}
+				{{#if PlacesID}}<a href="http://maps.google.com/maps/place?cid={{ PlacesID }}" data-role="button" data-icon="arrow-r" data-iconpos="right">Open in Google Maps</a>{{/if}}
+				{{#if YelpID}}<a href="http://www.yelp.com/biz/{{ YelpID }}" data-role="button" data-icon="arrow-r" data-iconpos="right">Open on Yelp</a>{{/if}}
+			</p>
+		</script>
+		<script id="con-info-list-items-template" type="text/x-handlebars-template">
+			{{#if MapName}}<a href="maps/{{ MapName }}.png" rel="external" data-role="button" data-icon="arrow-r" data-iconpos="right">{{/if}}
+				<h3>{{ Name }}</h3>
+				<p style="font-weight: bold;">{{ Location }}</p>
+				<p>{{nl2br Details}}</p>
+			{{#if MapName}}</a>{{/if}}
+		</script>
+		<script id="hotel-list-items-template" type="text/x-handlebars-template">
+			<a href="#hotel-details?id={{ ID }}" data-rel="dialog">
+				<h3>{{ Name }}</h3>
+				<p>{{nl2br Address}}</p>
+				<p>{{ Phone }}</p>
+			</a>
+		</script>
+		<script id="hotel-detail-template" type="text/x-handlebars-template">
+			<a href="tel:{{ Phone }}" data-role="button" data-icon="arrow-r" data-iconpos="right">Call {{ Phone }}</a>
+			<a href="http://maps.google.com/maps/place?cid={{ PlaceID }}" data-role="button" data-icon="arrow-r" data-iconpos="right">Open in Google Maps</a>
+			<a href="#" data-role="button" data-rel="back" data-theme="c">Close</a>
+		</script>
+		<script id="dealer-list-items-template" type="text/x-handlebars-template">
+			{{#if DividerTitle}}<li data-role="list-divider">{{ DividerTitle }}</li>{{/if}}
+			<li><a href="#dealer-details?id={{ ID }}" data-rel="dialog">
+				<h3>{{ Name }}</h3>
+				<p>{{ Location }}</p>
+			</a></li>
+		</script>
+		<script id="dealer-detail-template" type="text/x-handlebars-template">
+			<p>Table {{ Location }}</p>
+			{{#if Description}}<p>{{nl2br Description}}</p>{{/if}}
+			{{#if URL}}<a href="{{ URL }}" data-role="button" data-icon="arrow-r" data-iconpos="right">Open website</a>{{/if}}
+			<a href="#" data-role="button" data-rel="back" data-theme="c">Close</a>
+		</script>
+		<script id="building-map-list-items-template" type="text/x-handlebars-template">
+			<a href="maps/{{ Filename }}.png" rel="external" data-role="button" data-icon="arrow-r" data-iconpos="right">{{ Name }}</a>
+		</script>
+	</head>
+	<body>
+		<noscript>MyConbook Mobile needs JavaScript to run. Sorry!</noscript>
+
+		<!-- Home -->
+		<div data-role="page" id="home">
+			<div data-role="header"><h1>MyConbook</h1></div>
+			<div data-role="content">
+				<h3 id="convention-name" style="text-align: center;">Data loading, please wait.</h3>
+				<div id="master-button-list" style="display: none;">
+					<a href="#schedule-select" data-role="button" data-icon="grid">Schedule</a>
+					<a href="#guide-select" data-role="button" data-icon="grid">Guides</a>
+					<a href="#con-info" data-role="button" data-icon="grid">Con Info</a>
+					<a href="#dealers" data-role="button" data-icon="grid">Dealers</a>
+					<a href="#building-maps" data-role="button" data-icon="grid">Hotel Maps</a>
+					<a id="areamap" href="#" data-role="button" data-icon="arrow-r" data-iconpos="right">Area Map</a>
+					<a href="#about" data-role="button" data-icon="grid">About MyConbook</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- Schedule -->
+		<div data-role="page" id="schedule-select">
+			<div data-role="header"><h1>Select a day</h1></div>
+			<div data-role="content">
+				<ul id="schedule-select-list" data-role="listview" data-inset="true"></ul>
+			</div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+		<div data-role="page" id="schedule-list">
+			<div data-role="header">
+				<h1>Convention schedule</h1>
+				<div data-role="navbar">
+					<ul id="schedule-sort-order">
+						<li><a href="#" class="ui-btn-active">Time</a></li>
+						<li><a href="#">Name</a></li>
+						<li><a href="#">Room</a></li>
+						<li><a href="#">Category</a></li>
+					</ul>
+				</div>
+			</div>
+			<div data-role="content">
+				<ul id="schedule-items-list" data-role="listview" data-filter="true"></ul>
+			</div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+		<div data-role="dialog" id="schedule-details">
+			<div data-role="header"><h1>Event details</h1></div>
+			<div data-role="content" id="schedule-details-area"></div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+
+		<!-- Guides -->
+		<div data-role="page" id="guide-select">
+			<div data-role="header"><h1>Select a guide</h1></div>
+			<div data-role="content">
+				<a href="#guide-list?view=restaurants" data-role="button" data-icon="grid">Restaurants</a>
+				<a href="#guide-list?view=restaurants&amp;filter=opennow" data-role="button" data-icon="grid">Restaurants (open now)</a>
+				<a href="#guide-list?view=bars" data-role="button" data-icon="grid">Bars</a>
+				<a href="#guide-list?view=stores" data-role="button" data-icon="grid">Stores</a>
+				<a href="#guide-list?view=atms" data-role="button" data-icon="grid">Banks/ATMs</a>
+				<a href="mailto:myconbook@gmail.com" data-role="button" data-icon="alert">Report a problem</a>
+			</div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+		<div data-role="page" id="guide-list">
+			<div data-role="header">
+				<h1 class="subpageHeader">Guide</h1>
+				<div id="guide-navbar" data-role="navbar">
+					<ul id="guide-sort-order">
+						<li><a href="#" class="ui-btn-active">Category</a></li>
+						<li><a href="#">Name</a></li>
+					</ul>
+				</div>
+			</div>
+			<div data-role="content">
+				<ul id="guide-list-items" data-role="listview" data-filter="true"></ul>
+				<p id="open-now-warning" style="display: none;">Open Now only works during convention days (Thursday through Sunday).</p>
+			</div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+		<div data-role="page" id="guide-details">
+			<div data-role="header"><h1 class="subpageHeader">Location Details</h1></div>
+			<div data-role="content" id="guide-list-detail"></div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+
+		<!-- Con info -->
+		<div data-role="page" id="con-info">
+			<div data-role="header"><h1>Con Info</h1></div>
+			<div data-role="content"><ul id="con-info-list-items" data-role="listview" data-inset="true"></ul></div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+
+		<!-- Hotels -->
+		<div data-role="page" id="hotels">
+			<div data-role="header"><h1>Hotels</h1></div>
+			<div data-role="content"><ul id="hotel-list-items" data-role="listview" data-inset="true"></ul></div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+		<div data-role="dialog" id="hotel-details">
+			<div data-role="header"><h1 class="subpageHeader">Hotel details</h1></div>
+			<div data-role="content" id="hotel-list-detail"></div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+
+		<!-- Dealers -->
+		<div data-role="page" id="dealers">
+			<div data-role="header"><h1>Dealers</h1></div>
+			<div data-role="content"><ul id="dealers-list-items" data-role="listview" data-filter="true"></ul></div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+		<div data-role="dialog" id="dealer-details">
+			<div data-role="header"><h1 class="subpageHeader">Dealer Details</h1></div>
+			<div data-role="content" id="dealer-list-detail"></div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+
+		<!-- Building maps -->
+		<div data-role="page" id="building-maps">
+			<div data-role="header"><h1>Hotel maps</h1></div>
+			<div data-role="content"><ul id="building-maps-list-items" data-role="listview" data-inset="true"></ul></div>
+			<div data-role="footer">MyConbook</div>
+		</div>
+
+		<!-- About MyConbook -->
+		<div data-role="dialog" id="about">
+			<div data-role="header"><h1>About MyConbook</h1></div>
+			<div data-role="content">
+				<p>MyConbook - Where your conbook and phone collide.</p>
+				<p>Support is available by contacting <a href="mailto:myconbook@gmail.com">myconbook@gmail.com</a></p>
+				<p>or follow us on Twitter at <a href="https://twitter.com/myconbook">@myconbook</a></p>
+				<p id="about-details">Details here</p>
+				<p id="about-dbver">Database version here</p>
+				<p id="about-dbdate">Database build date here</p>
+			</div>
+		</div>
+
+		<!-- Javascript files -->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+		<script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+		<script type="text/javascript" src="js/handlebars.min.js"></script>
+		<script type="text/javascript" src="js/moment.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile.router.min.js"></script>
+		<script type="text/javascript" src="js/myconbook.mobile.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script> <!-- Load last -->
+	</body>
+</html>
