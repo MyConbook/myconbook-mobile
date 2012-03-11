@@ -98,7 +98,8 @@ myConbook =
 		@.data.dayList.reset dayListArray
 
 		# Schedule data
-		@.data.schedule.reset inData.schedule
+		@.data.schedule.reset _.sortBy inData.schedule, (schedule) ->
+			return schedule.StartDate
 
 		# Guide data
 		groupedHours = _.groupBy inData.restauranthours, (hours) ->
