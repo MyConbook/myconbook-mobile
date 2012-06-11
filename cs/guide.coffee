@@ -15,6 +15,7 @@ class myConbook.model.GuideModel extends Backbone.Model
 		json.IsOpen = @isOpen()
 		json.CleanedHours = @cleanedHours()
 		json.TodaysHours = @todaysHours()
+		json.DollarSigns = @dollarSigns()
 		return json
 	cleanedHours: ->
 		clean = (val) ->
@@ -40,6 +41,14 @@ class myConbook.model.GuideModel extends Backbone.Model
 			return cleaned.Sunday if today is 0
 		
 		return "Not available"
+	dollarSigns: ->
+		dollars = parseInt(@get("Dollars"))
+		return if dollars is null
+		return "$" if dollars is 1
+		return "$$" if dollars is 2
+		return "$$$" if dollars is 3
+		return "$$$$" if dollars is 4
+		return dollars
 
 # Controllers
 myConbook.controller.GuideList = (type, match, ui) ->

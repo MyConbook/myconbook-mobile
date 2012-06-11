@@ -52,10 +52,21 @@
 				<a href="tel:{{ Phone }}" data-role="button" data-icon="info" data-iconpos="right">Call {{ Phone }}</a>
 			</p>
 			{{/if}}
+			{{#if Rating}}
+				<h4>Rating: {{Rating}} stars</h4>
+			{{/if}}
+			{{#if Dollars}}
+				<h4>Cost: {{DollarSigns}}</h4>
+			{{/if}}
 			<p>
 				<h4>Category</h4>
 				{{ Category }}
 			</p>
+			{{#if Delivery}}
+			<p>
+				<h4>Has delivery</h4>
+			</p>
+			{{/if}}
 			{{#if Comments}}
 			<p>
 				<h4>Review/comments</h4>
