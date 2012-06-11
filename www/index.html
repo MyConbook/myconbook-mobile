@@ -37,8 +37,8 @@
 		<script id="atm-list-items-template" type="text/x-handlebars-template">
 			{{#DividerInfo}}<li data-role="list-divider">{{ Text }}<span class="ui-li-count">{{ Count }}</span></li>{{/DividerInfo}}
 			<li><a href="#guide-details?view={{ ViewName }}&id={{ ID }}">
-				<h3>{{ Building }}</h3>
-				<p>{{nl2br Address}}</p>
+				<h3>{{ Name }}</h3>
+				<p>{{nl2br Address}}{{#if Building}} &#9642; {{ Building }}{{/if}}</p>
 			</a></li>
 		</script>
 		<script id="guide-detail-template" type="text/x-handlebars-template">
