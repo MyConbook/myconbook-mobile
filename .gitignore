@@ -1,7 +1,7 @@
 # Generated files
-conbook.json
-js/myconbook.mobile.js
-js/myconbook.mobile.min.js
+www/conbook.json
+www/js/myconbook.mobile.js
+www/js/myconbook.mobile.min.js
 
 # Map files
-maps/*.png
+www/maps/*.png
