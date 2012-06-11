@@ -18,8 +18,9 @@ class myConbook.model.GuideModel extends Backbone.Model
 		return json
 	cleanedHours: ->
 		clean = (val) ->
-			 return val if val isnt "?"
-			 return "Unknown"
+			return "Closed" if not val
+			return val if val isnt "?"
+			return "Unknown"
 	
 		hours =
 			"Thursday": clean @get("Thursday")
