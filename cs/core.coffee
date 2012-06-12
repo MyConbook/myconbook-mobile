@@ -63,15 +63,15 @@ myConbook =
 	initRouter: ->
 		@router = new jQuery.mobile.Router
 			"#schedule-select": @controller.ScheduleSelect
-			"#schedule-list(.*?)+": @controller.ScheduleList
-			"#schedule-details(.*?)+": @controller.ScheduleDetails
-			"#guide-list(.*?)+": @controller.GuideList
-			"#guide-details(.*?)+": @controller.GuideDetails
+			"#schedule-list([?].*)?": @controller.ScheduleList
+			"#schedule-details([?].*)?": @controller.ScheduleDetails
+			"#guide-list([?].*)?": @controller.GuideList
+			"#guide-details([?].*)?": @controller.GuideDetails
 			"#con-info": @controller.ConInfoList
 			"#hotels": @controller.HotelList
-			"#hotel-details(.*?)+": @controller.HotelDetails
+			"#hotel-details([?].*)?": @controller.HotelDetails
 			"#dealers": @controller.DealerList
-			"#dealer-details(.*?)+": @controller.DealerDetails
+			"#dealer-details([?].*)?": @controller.DealerDetails
 			"#building-maps": @controller.BuildingMapList
 	prepareData: (inData) ->
 		# General data
