@@ -102,6 +102,9 @@ myConbook =
 			return schedule.StartDate
 
 		# Guide data
+		if not inData.info.HasGuide
+			jQuery("#guides").addClass("ui-disabled");
+
 		groupedHours = _.groupBy inData.restauranthours, (hours) ->
 			return hours.RestaurantID
 	
