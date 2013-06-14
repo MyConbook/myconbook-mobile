@@ -133,11 +133,11 @@ class myConbook.view.ScheduleListView extends Backbone.View
 		# Group our model contents by grouping method
 		groups = _.groupBy dayEvents, (model) =>
 			if @grouping is "Name"
-				return model.get("Title").substr(0, 1) ? ""
+				return model.get("Title").substr(0, 1) ? "(None)"
 			else if @grouping is "Room"
-				return model.get("Location") ? ""
+				return model.get("Location") ? "(None)"
 			else if @grouping is "Category"
-				return model.get("Category") ? ""
+				return model.get("Category") ? "(None)"
 			else # Time
 				return dayName + " at" + model.getStartDate().format(" h:mmA")#.replace(" 0:", " 12:")
 		

@@ -98,8 +98,14 @@ myConbook =
 		@.data.dayList.reset dayListArray
 
 		# Schedule data
-		@.data.schedule.reset _.sortBy inData.schedule, (schedule) ->
+		sortedSchedule = _.sortBy inData.schedule, (schedule) ->
 			return schedule.StartDate
+
+		for sched in sortedSchedule
+			if sched.Category is "(None)"
+				sched.Category = null
+
+		@.data.schedule.reset sortedSchedule
 
 		# Guide data
 		if not inData.info.HasGuide
