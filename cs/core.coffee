@@ -86,7 +86,7 @@ myConbook =
 
 		for date in inData.daylist
 			today = myConbook.helper.fixDayClock(date)
-			isToday = ((now.diff(today) >= 0) and (now.diff(today.clone().eod()) < 0))
+			isToday = ((now.diff(today) >= 0) and (now.diff(today.clone().endOf("day")) < 0))
 			myConbook.isConDay = isToday if myConbook.isConDay is false
 			
 			dayListArray.push {
