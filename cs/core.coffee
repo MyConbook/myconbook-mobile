@@ -109,7 +109,10 @@ myConbook =
 
 		# Guide data
 		if not inData.info.HasGuide
-			jQuery("#guides").addClass("ui-disabled");
+			if not not inData.info.GuideURL
+				jQuery("#guides").attr("href", inData.info.GuideURL)
+			else
+				jQuery("#guides").addClass("ui-disabled")
 
 		groupedHours = _.groupBy inData.restauranthours, (hours) ->
 			return hours.RestaurantID
